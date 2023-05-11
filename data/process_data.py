@@ -16,9 +16,11 @@ def load_data(messages_filepath, categories_filepath):
         ------------
         df : loaded dataset.    
     '''
+    # Read in datafiles
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
 
+    # Combine messages and catefories on 'id' field.
     df = messages.merge(categories, how = 'inner', on = 'id')
     return df
 
@@ -35,18 +37,25 @@ def clean_data(df):
         --------------
         df : dataframe after cleaning steps have been performed on it.
     '''
+    # Expand categories column to capture all different categories for each row.
     categories = df['categories'].str.split(";",expand = True)
 
+    # We want to rename column headers in categories. Grab the first row.
     row = categories.iloc[0]
-    category_colnames = row.tolist()
-    categories.columns = category_colnames
+    category_colnames = row.tolist() # Convert to list
+    categories.columns = category_colnames # These are the new names
 
+    # Replace each column name with the last digit of the string. 
     column_map = {col : col[-1] for col in categories.columns}
     categories = categories.rename(columns = column_map)
 
+    # Drop old categories column from original df
     df.drop(columns = ['categories'], inplace = True)
+    
+    # Concatenate original dataframe and new categories dataframe.
     df = pd.concat([df,categories], axis = 1)
     
+    # Make sure there are no duplicates.
     df.drop_duplicates(inplace = True)
     
     return df
@@ -64,7 +73,9 @@ def save_data(df, database_filename):
     Returns
     --------------
     '''  
+    # Create engine to store df in an sqllite database.
     engine = create_engine(database_filename)
+    # Store df in database.
     df.to_sql('myTable', engine, index=False)
 
 
