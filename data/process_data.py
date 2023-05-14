@@ -42,12 +42,13 @@ def clean_data(df):
 
     # We want to rename column headers in categories. Grab the first row.
     row = categories.iloc[0]
-    category_colnames = row.tolist() # Convert to list
+    category_colnames = row.apply(lambda x: x[:-2])
     categories.columns = category_colnames # These are the new names
 
     # Replace each column name with the last digit of the string. 
-    column_map = {col : col[-1] for col in categories.columns}
-    categories = categories.rename(columns = column_map)
+    for column in categories:
+        categories[column] = categories[column].apply(lambda x : int(x[-1]))
+
 
     # Drop old categories column from original df
     df.drop(columns = ['categories'], inplace = True)
@@ -76,7 +77,7 @@ def save_data(df, database_filename):
     # Create engine to store df in an sqllite database.
     engine = create_engine(database_filename)
     # Store df in database.
-    df.to_sql('myTable', engine, index=False)
+    df.to_sql('myTable', engine, index=False, if_exists = 'replace')
 
 
 def main():
