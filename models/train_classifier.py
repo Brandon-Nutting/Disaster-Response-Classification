@@ -33,12 +33,16 @@ def load_data(database_filepath):
     database_filepath: The filepath of the database we wish to load.
     Returns
     ------------
-    df : The loaded dataset. 
+    x : The features.
+    y : The target variables
+    y.columns : The category names
     '''
     engine = create_engine(database_filepath)
     df = pd.read_sql_table("myTable", con = engine)
     df = df.reset_index(drop = True)
-    return df
+    X = df['message']
+    y = df.iloc[:, 4:]
+    return x,y,y.columns
     
 def tokenize(text):
     '''
@@ -105,7 +109,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     -------------
     
     '''
-    
+
 
 def save_model(model, model_filepath):
     pass
