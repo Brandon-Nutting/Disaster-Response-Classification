@@ -75,7 +75,7 @@ def save_data(df, database_filename):
     --------------
     '''  
     # Create engine to store df in an sqllite database.
-    engine = create_engine(database_filename)
+    engine = create_engine('sqlite:///' + database_filename)
     # Store df in database.
     df.to_sql('myTable', engine, index=False, if_exists = 'replace')
 

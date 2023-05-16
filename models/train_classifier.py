@@ -15,8 +15,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import pickle
 from sklearn.model_selection import GridSearchCV
+import ssl
 
-
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -37,12 +43,12 @@ def load_data(database_filepath):
     y : The target variables
     y.columns : The category names
     '''
-    engine = create_engine(database_filepath)
+    engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table("myTable", con = engine)
     df = df.reset_index(drop = True)
     X = df['message']
     y = df.iloc[:, 4:]
-    return x,y,y.columns
+    return X, y, y.columns
     
 def tokenize(text):
     '''
