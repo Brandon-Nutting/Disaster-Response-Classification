@@ -109,11 +109,25 @@ def evaluate_model(model, X_test, Y_test, category_names):
     -------------
     
     '''
-
+    for i, col in enumerate(category_names):
+        y_true = Y_test.iloc[:, i]
+        y_pred = model.predict(X_test)[:, i]
+        print(f"Column {i} classification report is: ")
+        print(classification_report(np.hstack(y_true), np.hstack(y_pred), target_names=category_names))
 
 def save_model(model, model_filepath):
-    pass
-
+    '''
+    Saves the model as a pickle file
+    
+    Parameters
+    -------------
+    model : The model we wish to save.
+    model_filepath : filepath where we wills save our model.
+    Returns
+    -------------
+    '''
+    with open(model_filepath, 'wb') as file:
+        pickle.dump(model, file)
 
 def main():
     if len(sys.argv) == 3:
