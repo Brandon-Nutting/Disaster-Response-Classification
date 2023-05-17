@@ -93,12 +93,12 @@ def build_model():
     ])
     
     parameters = {
-        'vect__ngram_range': ((1, 1), (1, 2)),
-        'clf__estimator__n_estimators': [10, 25, 35],
-        'tfidf__use_idf': [True, False],
-        'vect__max_features': [None, 2500, 5000],
+        #'vect__ngram_range': ((1, 1), (1, 2)),
+        #'clf__estimator__n_estimators': [10, 25, 35],
+        'tfidf__use_idf': [True, False]#,
+        #'vect__max_features': [None, 2500, 5000],
     }
-    cv = GridSearchCV(pipeline, param_grid=parameters
+    cv = GridSearchCV(pipeline, param_grid=parameters)
     return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
