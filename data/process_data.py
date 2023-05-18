@@ -59,6 +59,9 @@ def clean_data(df):
     # Make sure there are no duplicates.
     df.drop_duplicates(inplace = True)
     
+    # Solving the edge case where 'related' has a value of 2
+    df['related'] = df['related'].apply(lambda x : 0 if x == 2 else 0)
+
     return df
 
 
